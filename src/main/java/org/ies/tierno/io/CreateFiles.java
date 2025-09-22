@@ -1,22 +1,25 @@
 package org.ies.tierno.io;
 
+import lombok.extern.log4j.Log4j;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Log4j
 public class CreateFiles {
 
     public static void createFile(String path) throws IOException {
         File file = new File(path);
-        if(!file.getParentFile().exists()) {
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             file.createNewFile();
         } else {
-            System.out.println("El archivo " + path +" ya existe");
+            log.info("El archivo " + path + " ya existe");
         }
     }
 
@@ -26,9 +29,9 @@ public class CreateFiles {
             createFile("/tmp/2/b.txt");
             createFile("1/a.txt");
             createFile("2/b.txt");
-            System.out.println("Archivos creados satisfactoriamente");
+            log.info("Archivos creados satisfactoriamente");
         } catch (IOException e) {
-            System.out.println("Error creando archivo " + e.getMessage());
+            log.error("Error creando archivo ", e);
         }
     }
 }
