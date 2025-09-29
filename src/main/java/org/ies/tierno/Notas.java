@@ -1,9 +1,12 @@
 package org.ies.tierno;
 
+import lombok.extern.log4j.Log4j;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.charset.StandardCharsets;
 
+@Log4j
 public class Notas {
     public static void main(String[] args)  {
         Path file = Path.of("/tmp/nota.txt");
@@ -20,7 +23,7 @@ public class Notas {
 
             System.out.println("La nota guardada es: " + content);
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo");
+            log.error("Error al leer el archivo", e);
         }
     }
 }

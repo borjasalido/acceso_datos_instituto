@@ -10,9 +10,9 @@ public class IoWriteBuffered {
 
         File file = new File(dir, "notes.txt");
 
-        try (OutputStream os = new FileOutputStream(file, false); // false = overwrite
-             Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-             BufferedWriter bw = new BufferedWriter(writer)) {
+        try (
+                var bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), StandardCharsets.UTF_8))
+        ) {
 
             bw.write("First line");
             bw.newLine();
