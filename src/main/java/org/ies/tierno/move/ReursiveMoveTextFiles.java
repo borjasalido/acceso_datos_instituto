@@ -9,11 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.nio.file.StandardCopyOption.*;
 
 @Log4j
-public class CopyTextFiles {
+public class ReursiveMoveTextFiles {
     public static void main(String[] args) throws IOException {
         var sr = new Scanner(System.in);
         System.out.println("Dime una ruta que quieras copiar");
@@ -25,24 +24,20 @@ public class CopyTextFiles {
         if (Files.notExists(sourceDir)) {
             log.error("La ruta de origen no existe");
         } else {
-            try (var sourcePaths = Files.list(sourceDir)) {
+            try (var sourcePaths = Files.walk(sourceDir)) {
                 sourcePaths
                         .filter(p -> Files.isRegularFile(p) && matcher.matches(p))
-                        .forEach(source -> copy(source, destDir, sourceDir));
+                        .forEach(source -> {
+                            try {
+                                var dest = destDir.resolve(sourceDir.relativize(source));
+                                Files.createDirectories(dest.getParent());
+                                Files.move(source, dest, REPLACE_EXISTING, ATOMIC_MOVE);
+                            }catch (IOException e) {
+                                log.error("Error al mover el archivo",e );
+                            }
+                        });
             }
         }
     }
 
-    private static void copy(Path source, Path rutaDestino, Path rutaOrigen) {
-        try {
-            var target = rutaDestino.resolve(rutaOrigen.relativize(source));
-            if (Files.isDirectory(source)) {
-                Files.createDirectories(target);
-            } else {
-                Files.copy(source, target, REPLACE_EXISTING, COPY_ATTRIBUTES);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
