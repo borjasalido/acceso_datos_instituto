@@ -15,7 +15,7 @@ public class Main {
             log.info("Introduce un path");
             String pathStr = scanner.nextLine();
 
-            Student st = new Student("1X", "BOb", "Esponja");
+            Student st = new Student("1X", "BOb", "Esponja", 10);
             System.out.println(st.getName());
         }
 }
